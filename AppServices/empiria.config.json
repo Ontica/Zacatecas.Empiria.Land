@@ -1,0 +1,42 @@
+﻿{
+  "appName": "Zacatecas Empiria Land Application Services",
+  "version": "5.0",
+  "date": "2020-11-24",
+  "settings": [
+    {
+      "type": "",
+      "key": "ApplicationKey",
+      "value": "{{APPLICATION-KEY}}"
+    },
+    {
+      "type": "",
+      "key": "GlobalConfigurationFile",
+      "value": "{{GLOBAL-CONFIGURATION-FILE}}"
+    },
+    {
+      "type": "",
+      "key": "System.Description",
+      "value": "Empiria Land Web API Zacatecas Edition"
+    },
+    {
+      "type": "Data",
+      "key": "IsObjectIdGeneratorServer",
+      "value": true
+    },
+    {
+      "type": "Land",
+      "key": "Templates.Path",
+      "value": "E:\\empiria.files\\zacatecas\\"
+    },
+    {
+      "type": "Land",
+      "key": "PrintServicesServerBaseAddress",
+      "value": "http://empiria.land/intranet/land.registration.system"
+    },
+    {
+      "type": "",
+      "key": "QRCodeServiceURL",
+      "value": "http://empiria.land/intranet/user.controls/qrcode.aspx"
+    }
+  ]
+}
