@@ -59,16 +59,24 @@ de las web apis, de los componentes y de los casos de uso que conforman Empiria 
     <WarningsAsErrors />
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\land\Land.WebAPI\Empiria.Land.WebAPI.csproj" />
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\land\Land.WebAPI\Empiria.Land.WebApi.csproj" />
     <ProjectReference Include="..\..\onepoint\EFiling.WebApi\Empiria.OnePoint.EFiling.WebApi.csproj" />
     <ProjectReference Include="..\..\onepoint\ESign.WebApi\Empiria.OnePoint.ESign.WebApi.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Net.Http" />
-  </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
-    <PackageReference Include="Empiria.Land.WebApi" Version="4.0.0" />
+    <PackageReference Include="Empiria.Land.WebApi" Version="5.0.0" />
     <PackageReference Include="Empiria.OnePoint.EFiling.WebApi" Version="1.0.0" />
     <PackageReference Include="Empiria.OnePoint.ESign.WebApi" Version="2.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="empiria.config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="empiria.environment.vars.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
