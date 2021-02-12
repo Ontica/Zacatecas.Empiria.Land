@@ -60,16 +60,17 @@ de las web apis, de los componentes y de los casos de uso que conforman Empiria 
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Net.Http" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\land\Land.WebAPI\Empiria.Land.WebApi.csproj" />
-    <ProjectReference Include="..\..\onepoint\EFiling.WebApi\Empiria.OnePoint.EFiling.WebApi.csproj" />
-    <ProjectReference Include="..\..\onepoint\ESign.WebApi\Empiria.OnePoint.ESign.WebApi.csproj" />
+    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
+    <PackageReference Include="Empiria.WebApi" Version="2.0.0" />
     <PackageReference Include="Empiria.Land.WebApi" Version="5.0.0" />
-    <PackageReference Include="Empiria.OnePoint.EFiling.WebApi" Version="1.0.0" />
-    <PackageReference Include="Empiria.OnePoint.ESign.WebApi" Version="2.0.0" />
+    <PackageReference Include="SIT.Finanzas.Connector" Version="1.0.0" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
+    <ProjectReference Include="..\..\extensions\WebApi\Empiria.WebApi.csproj" />
+    <ProjectReference Include="..\..\land\Land.WebAPI\Empiria.Land.WebApi.csproj" />
+    <ProjectReference Include="..\Integration\SIT.Finanzas\SIT.Finanzas.Connector.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="empiria.config.json">
