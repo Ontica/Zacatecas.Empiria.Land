@@ -22,16 +22,14 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
     #region Public methods
 
     public async Task<decimal> CalculateFixedFee(string serviceUID, decimal quantity) {
-      var response = await Mapper.GetFixedConceptCost(serviceUID, quantity);
-
-      return response.Total;
+      // Zacatecas' SIT service needs Shopping Cart to perform one by one fee calculation.
+      return await Task.FromResult(0m);
     }
 
 
     public async Task<decimal> CalculateVariableFee(string serviceUID, decimal taxableBase) {
-      var electronicPaymentUID = "12345678";
-
-      return await Mapper.GetVariableConceptCost(electronicPaymentUID, serviceUID, taxableBase);
+      // Zacatecas' SIT service needs Shopping Cart to perform one by one fee calculation.
+      return await Task.FromResult(0m);
     }
 
 
