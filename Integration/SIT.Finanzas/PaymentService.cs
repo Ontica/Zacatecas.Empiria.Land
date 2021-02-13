@@ -19,7 +19,14 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
   /// <summary>Implements IPaymentService interface using Zacatecas Finanzas SIT services.</summary>
   public class PaymentService : IPaymentService {
 
+    private readonly ApiClient _apiClient;
+
     #region Public methods
+
+    public PaymentService() {
+      _apiClient = new ApiClient();
+    }
+
 
     public async Task<decimal> CalculateFixedFee(string serviceUID, decimal quantity) {
       // Zacatecas' SIT service needs Shopping Cart to perform one by one fee calculation.
@@ -34,12 +41,20 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
 
 
     public async Task<IPaymentOrder> GeneratePaymentOrderFor(PaymentOrderRequestDto paymentOrderRequest) {
-      return await Mapper.GetPaymentRequest(paymentOrderRequest);
+      SolicitudDto sitRequest = Mapper.MapPaymentRequestToSITRequest(paymentOrderRequest);
+
+      OrdenPagoDto ordenPago = await _apiClient.CreatePaymentRequest(sitRequest);
+
+      return Mapper.MapSITOrdenPagoToPaymentOrderRequest(ordenPago);
     }
 
 
     public async Task<string> GetPaymentStatus(IPaymentOrder paymentOrder) {
-      var payment = await Mapper.GetPayment(paymentOrder.UID);
+      int idPagoElectronico = Convert.ToInt32(paymentOrder.UID);
+
+      var SITPayment = await _apiClient.ValidatePayment(idPagoElectronico);
+
+      var payment = Mapper.MapSITPaymentToPayment(SITPayment);
 
       return payment.Status;
     }

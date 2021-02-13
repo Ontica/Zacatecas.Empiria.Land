@@ -26,24 +26,12 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector.Adapters {
 
     #region Internal Methods
 
-    internal async static Task<PaymentOrderDto> GetPaymentRequest(PaymentOrderRequestDto request) {
-      SolicitudDto sitRequest = MapPaymentRequestToSITRequest(request);
-
-      OrdenPagoDto ordenPago = await ApiClient.CreatePaymentRequest(sitRequest);
-
-      PaymentOrderDto paymentOrder = MapSITOrdenPagoToPaymentOrderRequest(ordenPago);
-
-      var paymentFormatUrl = await GetFormatPaymentURL(paymentOrder.UID);
-
-      paymentOrder.AddAttribute("PaymentFormatUrl", paymentFormatUrl);
-
-      return paymentOrder;
-    }
 
     internal async static Task<PaymentOrderRequestConceptDto> GetFixedConceptCost(string serviceUID, decimal quantity) {
       var service = await GetSITService(serviceUID);
 
       var concept = new PaymentOrderRequestConceptDto();
+
       concept.ConceptUID = service.idServicio.ToString();
       concept.Quantity = quantity;
       concept.UnitCost = Convert.ToDecimal(service.importe);
@@ -60,25 +48,21 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector.Adapters {
       presupuesto.idServicio = Convert.ToInt32(serviceUID);
       presupuesto.valor = taxableBase;
 
-      return await ApiClient.GetVariableCost(presupuesto);
+      var apiClient = new ApiClient();
+
+      return await apiClient.GetVariableCost(presupuesto);
     }
 
-    internal async static Task<SITPaymentDto> GetPayment(string elctronicPaymentUID) {
-      int idPagoElectronico = Convert.ToInt32(elctronicPaymentUID);
-      var SITPayment = await ApiClient.ValidatePayment(idPagoElectronico);
-
-      return MapSITPaymentToPayment(SITPayment);
-    }
 
     #endregion Internal Methods
 
     #region Private Methods
 
-    private static SolicitudDto MapPaymentRequestToSITRequest(PaymentOrderRequestDto paymentRequest) {
+    internal static SolicitudDto MapPaymentRequestToSITRequest(PaymentOrderRequestDto paymentRequest) {
       SolicitudDto solicitud = new SolicitudDto();
 
       solicitud.contribuyente = paymentRequest.RequestedBy;
-      solicitud.rfc = paymentRequest.RFC;
+      solicitud.rfc = paymentRequest.RFC.Replace("-", String.Empty);
       solicitud.direccion = paymentRequest.Address;
       solicitud.servicios = MapConceptsToSITServices(paymentRequest.Concepts);
       solicitud.tramite = paymentRequest.BaseTransactionUID;
@@ -91,8 +75,10 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector.Adapters {
 
       foreach (PaymentOrderRequestConceptDto concept in concepts) {
         OrdenDto sitService = new OrdenDto();
+
         sitService.idServicio = Convert.ToInt32(concept.ConceptUID);
         sitService.cantidad = Convert.ToInt32(concept.Quantity);
+
         services.Add(sitService);
       }
 
@@ -100,9 +86,12 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector.Adapters {
     }
 
 
-    private static async Task<string> GetFormatPaymentURL(string electronicPaymentUIDaymentId) {
+    internal static async Task<string> GetFormatPaymentURL(string electronicPaymentUIDaymentId) {
       int idPagoElectronico = Convert.ToInt32(electronicPaymentUIDaymentId);
-      return await ApiClient.GetPaymentFormat(idPagoElectronico);
+
+      var apiClient = new ApiClient();
+
+      return await apiClient.GetPaymentFormat(idPagoElectronico);
     }
 
 
@@ -118,7 +107,7 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector.Adapters {
       return SITService;
     }
 
-    private static SITPaymentDto MapSITPaymentToPayment(PagoDto SITPayment) {
+    internal static SITPaymentDto MapSITPaymentToPayment(PagoDto SITPayment) {
       SITPaymentDto payment = new SITPaymentDto();
 
       payment.PaymentUID = SITPayment.IdCobro.ToString();
@@ -130,7 +119,7 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector.Adapters {
       return payment;
     }
 
-    private static PaymentOrderDto MapSITOrdenPagoToPaymentOrderRequest(OrdenPagoDto ordenPago) {
+    internal static PaymentOrderDto MapSITOrdenPagoToPaymentOrderRequest(OrdenPagoDto ordenPago) {
       PaymentOrderDto paymentOrder = new PaymentOrderDto();
 
       paymentOrder.UID = ordenPago.idPagoElectronico.ToString();
@@ -157,7 +146,9 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector.Adapters {
 
     private static async Task<List<ServicioDto>> GetSITServices() {
       if ((services == null) || (services.Count == 0)) {
-        services = await ApiClient.GetServicesList();
+        var apiClient = new ApiClient();
+
+        services = await apiClient.GetServicesList();
       }
 
       return services;

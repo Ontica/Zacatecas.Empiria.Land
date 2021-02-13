@@ -22,25 +22,27 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
 
     #region Global Variables
 
-    static HttpClient client = new HttpClient();
-    private static readonly string baseAddress = "http://10.113.5.187:8080/sit-ingresos/api/";
+    private readonly HttpClient client = new HttpClient();
+    private readonly string baseAddress = "http://10.113.5.187:8080/sit-ingresos/api/";
 
     #endregion Global Variables
 
+    internal ApiClient() {
+      this.SetHttpClientProperties();
+    }
+
     #region Internal Methods
 
-    internal static async Task<OrdenPagoDto> CreatePaymentRequest(SolicitudDto request) {
-      SetHttpClientProperties();
-
+    internal async Task<OrdenPagoDto> CreatePaymentRequest(SolicitudDto request) {
       HttpResponseMessage response = await client.PostAsJsonAsync("pagosDependencias/calcularRegistroPublicoCompleto", request);
-      response.EnsureSuccessStatusCode();
 
+      response.EnsureSuccessStatusCode();
 
       return await response.Content.ReadAsAsync<OrdenPagoDto>();
     }
 
 
-    internal static async Task<List<ServicioDto>> GetServicesList() {
+    internal async Task<List<ServicioDto>> GetServicesList() {
       List<ServicioDto> services = new List<ServicioDto>();
 
       HttpResponseMessage response = await client.GetAsync(baseAddress + "pagosDependencias/serviciosRegistroPublico");
@@ -52,9 +54,7 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
       return services;
     }
 
-    internal static async Task<decimal> GetVariableCost(PresupuestoDto presupuestoDeServicio) {
-      SetHttpClientProperties();
-
+    internal async Task<decimal> GetVariableCost(PresupuestoDto presupuestoDeServicio) {
       var serviceBudget = new PresupuestoRespuestaDto();
 
       HttpResponseMessage response = await client.PostAsJsonAsync("pagosDependencias/registroPublico", presupuestoDeServicio);
@@ -67,7 +67,7 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
     }
 
 
-    internal static async Task<string> GetPaymentFormat(int idPago) {
+    internal async Task<string> GetPaymentFormat(int idPago) {
       string paymentFormUrl = "";
 
       HttpResponseMessage response = await client.GetAsync(baseAddress + $"formatopago?idPagoElectronico={idPago}");
@@ -79,7 +79,7 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
       return paymentFormUrl;
     }
 
-    internal static async Task<PagoDto> ValidatePayment(int idPagoElectronico) {
+    internal async Task<PagoDto> ValidatePayment(int idPagoElectronico) {
       HttpResponseMessage response = await client.GetAsync(baseAddress + $"pagosDependencias/consultarPagoRegistroPublico/{idPagoElectronico}");
 
       if (response.IsSuccessStatusCode) {
@@ -94,7 +94,7 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
 
     #region Private Methods
 
-    private static void SetHttpClientProperties() {
+    private void SetHttpClientProperties() {
       client.BaseAddress = new Uri(baseAddress);
       client.DefaultRequestHeaders.Accept.Clear();
       client.DefaultRequestHeaders.Accept.Add(
