@@ -79,6 +79,7 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
       return paymentFormUrl;
     }
 
+
     internal async Task<PagoDto> ValidatePayment(int idPagoElectronico) {
       HttpResponseMessage response = await client.GetAsync(baseAddress + $"pagosDependencias/consultarPagoRegistroPublico/{idPagoElectronico}");
 
