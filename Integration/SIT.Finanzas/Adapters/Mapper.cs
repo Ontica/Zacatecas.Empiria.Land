@@ -75,6 +75,7 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector.Adapters {
 
         sitService.idServicio = Convert.ToInt32(concept.ConceptUID);
         sitService.cantidad = Convert.ToInt32(concept.Quantity);
+        sitService.valor = concept.TaxableBase;
 
         mappedServices.Add(sitService);
       }

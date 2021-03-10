@@ -48,6 +48,17 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector.Adapters {
       get; set;
     }
 
+    public decimal valor {
+      get; set;
+    } = 0;
+
+    public int idActoContrato {
+      get; set;
+    } = 0;
+
+    public string tipoInmueble {
+      get; set;
+    } = string.Empty;
 
   } // class OrdenDto
 

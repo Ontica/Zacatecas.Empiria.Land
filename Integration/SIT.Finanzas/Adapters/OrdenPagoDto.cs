@@ -32,10 +32,28 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector.Adapters {
       get; set;
     }
 
+    public OrdenPagoConceptoDto[] conceptos {
+      get; set;
+    }
+
     public string urlFormatoPago {
       get; set;
     }
 
   } // class OrdenPagoDto
+
+  internal class OrdenPagoConceptoDto {
+    public int idConcepto {
+      get; set;
+    }
+
+    public string descripcion {
+      get; set;
+    }
+
+    public decimal importe {
+      get; set;
+    }
+  }
 
 } // namespace Empiria.Zacatecas.Integration.SITFinanzasConnector.Adapters
