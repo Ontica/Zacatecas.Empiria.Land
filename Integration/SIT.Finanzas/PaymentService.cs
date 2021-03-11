@@ -23,8 +23,8 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
 
     #region Public methods
 
-    public PaymentService() {
-      _apiClient = new ApiClient();
+    public PaymentService(string baseAddress) {
+      _apiClient = new ApiClient(baseAddress);
     }
 
 

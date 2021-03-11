@@ -23,11 +23,12 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
     #region Global Variables
 
     private readonly HttpClient client = new HttpClient();
-    private readonly string baseAddress = "http://10.113.5.187:8080/sit-ingresos/api/";
+    private readonly string baseAddress;
 
     #endregion Global Variables
 
-    internal ApiClient() {
+    internal ApiClient(string baseAddress) {
+      this.baseAddress = baseAddress;
       this.SetHttpClientProperties();
     }
 
@@ -45,7 +46,7 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
     internal async Task<List<ServicioDto>> GetServicesList() {
       List<ServicioDto> services = new List<ServicioDto>();
 
-      HttpResponseMessage response = await client.GetAsync(baseAddress + "pagosDependencias/serviciosRegistroPublico");
+      HttpResponseMessage response = await client.GetAsync("pagosDependencias/serviciosRegistroPublico");
 
       if (response.IsSuccessStatusCode) {
         services = await response.Content.ReadAsAsync<List<ServicioDto>>();
@@ -70,7 +71,7 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
     internal async Task<string> GetPaymentFormat(int idPago) {
       string paymentFormUrl = "";
 
-      HttpResponseMessage response = await client.GetAsync(baseAddress + $"formatopago?idPagoElectronico={idPago}");
+      HttpResponseMessage response = await client.GetAsync($"formatopago?idPagoElectronico={idPago}");
 
       if (response.IsSuccessStatusCode) {
         paymentFormUrl = await response.Content.ReadAsStringAsync();
@@ -81,7 +82,7 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
 
 
     internal async Task<PagoDto> ValidatePayment(int idPagoElectronico) {
-      HttpResponseMessage response = await client.GetAsync(baseAddress + $"pagosDependencias/consultarPagoRegistroPublico/{idPagoElectronico}");
+      HttpResponseMessage response = await client.GetAsync($"pagosDependencias/consultarPagoRegistroPublico/{idPagoElectronico}");
 
       if (response.IsSuccessStatusCode) {
         return await response.Content.ReadAsAsync<PagoDto>();
