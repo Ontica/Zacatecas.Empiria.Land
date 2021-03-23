@@ -1,10 +1,10 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transaction Management                     Component : Integration Layer                       *
-*  Assembly : SIT.Finanzas.Connector.dll                 Pattern   : Data Transfer Object                    *
+*  Module   : Transaction Management                     Component : Services Layer                          *
+*  Assembly : SIT.Finanzas.Connector.dll                 Pattern   : Web Api Proxy                           *
 *  Type     : ApiClient                                  License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Client to consume SIT web services.                                                            *
+*  Summary  : Web api client that consumes SIT web services.                                                 *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -17,7 +17,7 @@ using Empiria.Zacatecas.Integration.SITFinanzasConnector.Adapters;
 
 namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
 
-  /// <summary>Client to consume web services from SIT.</summary>
+  /// <summary>Web api client that consumes SIT web services.</summary>
   internal class ApiClient {
 
     #region Global Variables
@@ -35,7 +35,8 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
     #region Internal Methods
 
     internal async Task<OrdenPagoDto> CreatePaymentRequest(SolicitudDto request) {
-      HttpResponseMessage response = await client.PostAsJsonAsync("pagosDependencias/calcularRegistroPublicoCompleto", request);
+      HttpResponseMessage response =
+              await client.PostAsJsonAsync("pagosDependencias/calcularRegistroPublicoCompleto", request);
 
       response.EnsureSuccessStatusCode();
 
@@ -58,7 +59,8 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
     internal async Task<decimal> GetVariableCost(PresupuestoDto presupuestoDeServicio) {
       var serviceBudget = new PresupuestoRespuestaDto();
 
-      HttpResponseMessage response = await client.PostAsJsonAsync("pagosDependencias/registroPublico", presupuestoDeServicio);
+      HttpResponseMessage response =
+              await client.PostAsJsonAsync("pagosDependencias/registroPublico", presupuestoDeServicio);
 
       if (response.IsSuccessStatusCode) {
         serviceBudget = await response.Content.ReadAsAsync<PresupuestoRespuestaDto>();
@@ -71,7 +73,7 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
     internal async Task<string> GetPaymentFormat(int idPago) {
       string paymentFormUrl = "";
 
-      HttpResponseMessage response = await client.GetAsync($"formatopago?idPagoElectronico={idPago}");
+      HttpResponseMessage response = await client.GetAsync($"formatopago/rp/?idPagoElectronico={idPago}");
 
       if (response.IsSuccessStatusCode) {
         paymentFormUrl = await response.Content.ReadAsStringAsync();
@@ -82,15 +84,16 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
 
 
     internal async Task<PagoDto> ValidatePayment(int idPagoElectronico) {
-      HttpResponseMessage response = await client.GetAsync($"pagosDependencias/consultarPagoRegistroPublico/{idPagoElectronico}");
+      HttpResponseMessage response =
+              await client.GetAsync($"pagosDependencias/consultarPagoRegistroPublico/{idPagoElectronico}");
 
       if (response.IsSuccessStatusCode) {
         return await response.Content.ReadAsAsync<PagoDto>();
       } else {
         throw new Exception($"Can not find payment with id={idPagoElectronico}");
       }
-
     }
+
 
     #endregion Internal Methods
 

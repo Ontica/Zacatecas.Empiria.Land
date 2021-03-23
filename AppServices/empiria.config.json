@@ -1,7 +1,7 @@
 ﻿{
   "appName": "Zacatecas Empiria Land Application Services",
   "version": "5.0",
-  "date": "2020-11-24",
+  "date": "2021-02-09",
   "settings": [
     {
       "type": "",
@@ -37,6 +37,11 @@
       "type": "",
       "key": "QRCodeServiceURL",
       "value": "http://empiria.land/intranet/user.controls/qrcode.aspx"
+    },
+    {
+      "type": "OnePoint.ESign",
+      "key": "SignableDocumentsURL",
+      "value": "{{SIGNABLE-DOCUMENTS-URL}}"
     }
   ]
 }
