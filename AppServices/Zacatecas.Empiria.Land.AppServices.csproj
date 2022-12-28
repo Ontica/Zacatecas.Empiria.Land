@@ -2,12 +2,13 @@
   <PropertyGroup>
     <Company>Ontica</Company>
     <Product>Zacatecas Empiria Land Application Services</Product>
-    <Description>Contiene casos de uso especiales para el Registro Público de la Propiedad del Estado de Zacatecas
-y sirve como aglutinador de servicios web de tipo Http/Json de la solución.
-
-A través de sus componentes, es posible modificar el comportamiento predeterminado
-de las web apis, de los componentes y de los casos de uso que conforman Empiria Land.</Description>
-    <Copyright>(c) 2020-2021. La Vía Óntica SC, Ontica LLC and contributors.</Copyright>
+    <Description>
+      Contiene casos de uso especiales para el Registro Público de la Propiedad del Estado de Zacatecas
+      y sirve como aglutinador de servicios web de tipo Http/Json de la solución.
+      A través de sus componentes, es posible modificar el comportamiento predeterminado
+      de las web apis, de los componentes y de los casos de uso que conforman Empiria Land.
+    </Description>
+    <Copyright>(c) 2020-2023. La Vía Óntica SC, Ontica LLC and contributors.</Copyright>
     <Version>5.0</Version>
     <AssemblyVersion>5.0.0</AssemblyVersion>
     <FileVersion>5.0.0.1</FileVersion>
@@ -60,7 +61,6 @@ de las web apis, de los componentes y de los casos de uso que conforman Empiria 
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
     <PackageReference Include="Empiria.WebApi" Version="2.0.0" />
