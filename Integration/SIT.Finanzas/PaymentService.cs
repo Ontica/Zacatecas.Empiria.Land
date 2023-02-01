@@ -47,7 +47,7 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
 
       string urlPaymentDocument = await _apiClient.GetPaymentFormat(ordenPago.idPagoElectronico);
 
-      var paymentOrder = Mapper.MapSITOrdenPagoToPaymentOrderRequest(ordenPago);
+      PaymentOrderDto paymentOrder = Mapper.MapSITOrdenPagoToPaymentOrderRequest(ordenPago);
 
       paymentOrder.Attributes.Add("url", urlPaymentDocument);
       paymentOrder.Attributes.Add("mediaType", "application/pdf");

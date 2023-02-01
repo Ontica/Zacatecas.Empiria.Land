@@ -43,11 +43,15 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector.Adapters {
 
       DateTime dateValue;
 
-      if (DateTime.TryParse(ordenPago.fechaGeneracion, out dateValue)) {
+      if (DateTime.TryParse(ordenPago.fechaGeneracion,
+                            System.Globalization.CultureInfo.GetCultureInfo("es-US"),
+                            System.Globalization.DateTimeStyles.None,  out dateValue)) {
         paymentOrder.IssueTime = dateValue;
       }
 
-      if (DateTime.TryParse(ordenPago.fechaVencimiento, out dateValue)) {
+      if (DateTime.TryParse(ordenPago.fechaVencimiento,
+                            System.Globalization.CultureInfo.GetCultureInfo("es-US"),
+                            System.Globalization.DateTimeStyles.None, out dateValue)) {
         paymentOrder.DueDate = dateValue;
       }
 
