@@ -25,10 +25,10 @@ This repository corresponds to the custom-tailored version of that system for th
 [Government of the State of Zacatecas](https://zacatecas.gob.mx/), Mexico, just for the land titles recording solution.
 
 The backend of the product is based on C# 8.0 and .NET Framework 4.8 with ASP .NET Web Api, and can be
-compiled using Visual Studio 2019 Community Edition.
+compiled using Visual Studio 2022 Community Edition.
 
-The frontend runs on modern browsers and is based on Angular 11 and TypeScript 4, and can be updated using
-Visual Studio Code 1.5.
+The frontend runs on modern browsers and is based on Angular 14 and TypeScript 4, and can be updated using
+Visual Studio Code.
 
 As other Empiria products, this solution runs over [Empiria Framework](https://github.com/Ontica/Empiria.Core)
 components and, as usual, needs some of the [Empiria Extensions](https://github.com/Ontica/Empiria.Extensions).
@@ -59,5 +59,5 @@ de derechos de autor.
 
 ## Copyright
 
-Copyright © 2020-2023. La Vía Óntica SC, Ontica LLC y autores.
+Copyright © 2020-2024. La Vía Óntica SC, Ontica LLC y autores.
 Todos los derechos reservados.

@@ -8,7 +8,7 @@
       A través de sus componentes, es posible modificar el comportamiento predeterminado
       de las web apis, de los componentes y de los casos de uso que conforman Empiria Land.
     </Description>
-    <Copyright>(c) 2020-2023. La Vía Óntica SC, Ontica LLC and contributors.</Copyright>
+    <Copyright>(c) 2020-2024. La Vía Óntica SC, Ontica LLC and contributors.</Copyright>
     <Version>5.0</Version>
     <AssemblyVersion>5.0.0</AssemblyVersion>
     <FileVersion>5.0.0.1</FileVersion>
