@@ -90,7 +90,7 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
       if (response.IsSuccessStatusCode) {
         return await response.Content.ReadAsAsync<PagoDto>();
       } else {
-        throw new Exception($"Can not find payment with id={idPagoElectronico}");
+        throw new Exception($"There is none payment with id={idPagoElectronico}");
       }
     }
 
