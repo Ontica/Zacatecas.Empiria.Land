@@ -41,7 +41,7 @@
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
-    <NoWarn />
+    <NoWarn>CS3001;CS3003</NoWarn>
     <WarningsAsErrors />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -56,9 +56,12 @@
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
-    <NoWarn />
+    <NoWarn>CS3001;CS3003</NoWarn>
     <WarningsAsErrors />
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Integration\SeguriSign.Connector\SeguriSign.Connector.csproj" />
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Net.Http" />
   </ItemGroup>
