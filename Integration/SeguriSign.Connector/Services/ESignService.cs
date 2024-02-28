@@ -10,6 +10,7 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Text;
 
 using SeguriSign.Connector.SeguriSignWS;
 
@@ -52,9 +53,25 @@ namespace SeguriSign.Connector {
 
       byte[] signedData = signResponse.signedDoc.data;
 
-      string sequenceID = GetESignSequenceID(signedData, documentToBeSigned.filename);
+      string signSequenceID = GetESignSequenceID(signedData, documentToBeSigned.filename);
 
-      return sequenceID;
+      string evidenceXml = GetEvidenceXmlString(signSequenceID);
+
+      return evidenceXml;
+    }
+
+    private string GetEvidenceXmlString(string signSequenceID) {
+      var xmlRequest = new GetXMLForensicEvidencesUnilateralRequest();
+
+      xmlRequest.idFromVerify = signSequenceID;
+
+      _apiClient.Timeout = 5 * 60 * 1000;
+
+      var xmlResponse = (GetXMLForensicEvidencesUnilateralResponse) _apiClient.ProcessMessage(xmlRequest);
+
+      byte[] xmlData = xmlResponse.evidences.data;
+
+      return Encoding.UTF8.GetString(xmlData, 0, xmlData.Length);
     }
 
     private string GetESignSequenceID(byte[] signedData, string filename) {
