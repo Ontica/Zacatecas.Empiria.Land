@@ -42,15 +42,35 @@ namespace SeguriSign.Connector {
 
       Document documentToBeSigned = CreateDocumentToBeSigned(contentToSign);
 
-      SignDocumentRequest request = CreateSignDocumentRequest(documentToBeSigned);
+      SignDocumentRequest signRequest = CreateSignDocumentRequest(documentToBeSigned);
 
-      var response = (SignDocumentResponse) _apiClient.ProcessMessage(request);
+      var signResponse = (SignDocumentResponse) _apiClient.ProcessMessage(signRequest);
 
-      if (!response.status) {
+      if (!signResponse.status) {
         throw new Exception("El contenido no pudo ser firmado electrónicamente");
       }
 
-      return GetSignedContent(response.signedDoc.data);
+      byte[] signedData = signResponse.signedDoc.data;
+
+      string sequenceID = GetESignSequenceID(signedData, documentToBeSigned.filename);
+
+      return sequenceID;
+    }
+
+    private string GetESignSequenceID(byte[] signedData, string filename) {
+      var verifyRequest = new VerifyRequest();
+
+      var verifyDocument = new Document();
+
+      verifyDocument.filename = filename;
+      verifyDocument.compressed = false;
+      verifyDocument.data = signedData;
+
+      verifyRequest.signedDoc = verifyDocument;
+
+      var verifyResponse = (VerifyResponse) _apiClient.ProcessMessage(verifyRequest);
+
+      return verifyResponse.sequence;
     }
 
     #region Helpers
@@ -78,16 +98,6 @@ namespace SeguriSign.Connector {
       request.withContent = true;
 
       return request;
-    }
-
-    private string GetSignedContent(byte[] data) {
-      string signedPath = Path.Combine(FILES_PATH, "firmados", $"archivo_firmado.txt");
-
-      // string s = response.signedDoc.filename;
-
-      File.WriteAllBytes(signedPath, data);
-
-      return File.ReadAllText(signedPath);
     }
 
     /// <summary>Regresa la llave asignada al usuario</summary>
