@@ -55,9 +55,13 @@ namespace SeguriSign.Connector {
 
       string signSequenceID = GetESignSequenceID(signedData, documentToBeSigned.filename);
 
-      string evidenceXml = GetEvidenceXmlString(signSequenceID);
+      string signXmlEvidence = GetEvidenceXmlString(signSequenceID);
 
-      return evidenceXml;
+      var converter = new ESignXmlToSignDataConverter(signXmlEvidence);
+
+      var eSignData = converter.Convert();
+
+      return eSignData;
     }
 
     private string GetEvidenceXmlString(string signSequenceID) {

@@ -57,6 +57,7 @@
     </Compile>
     <Compile Include="Services\ESignService.cs" />
     <Compile Include="Adapters\UserCredentialsDto.cs" />
+    <Compile Include="Adapters\ESignXmlToSignDataConverter.cs" />
     <Compile Include="Web References\SeguriSignWS\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
