@@ -1,0 +1,1571 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WSDL:definitions xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:DIME="http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/" xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://localhost:80/SgSignToolsWS.wsdl" xmlns:MIME="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:sgdata="urn:sgdata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.xmlsoap.org/wsdl/" name="SgSignToolsWS" targetNamespace="http://localhost:80/SgSignToolsWS.wsdl" xmlns:WSDL="http://schemas.xmlsoap.org/wsdl/">
+  <WSDL:types>
+    <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="urn:sgdata">
+      <xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+      <xsd:simpleType name="CryptoEngine">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="SGLIB" />
+          <xsd:enumeration value="CAPI" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="SHashAlgorithm">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="S-SHA-1" />
+          <xsd:enumeration value="S-SHA-256" />
+          <xsd:enumeration value="S-SHA-384" />
+          <xsd:enumeration value="S-SHA-512" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="evidence">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="sgPKCS7" />
+          <xsd:enumeration value="sgOCSP" />
+          <xsd:enumeration value="sgTSP" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="DataType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="document" />
+          <xsd:enumeration value="digest" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="HashAlgorithm">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="MD5" />
+          <xsd:enumeration value="SHA-1" />
+          <xsd:enumeration value="SHA-256" />
+          <xsd:enumeration value="SHA-384" />
+          <xsd:enumeration value="SHA-512" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="response">
+        <xsd:sequence />
+      </xsd:complexType>
+      <xsd:complexType name="OKResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="request">
+        <xsd:sequence />
+      </xsd:complexType>
+      <xsd:complexType name="Document">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="filename" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="compressed" type="xsd:boolean" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="data" type="xsd:base64Binary" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Document2">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="name" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="data" type="xsd:base64Binary" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="User">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="username" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="password" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="name" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="email" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="keyid" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="isAdministrator" type="xsd:boolean" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="isActive" type="xsd:boolean" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="Certificate" nillable="true" type="xsd:base64Binary" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="UserKey">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="username" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="keyid" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Key">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="keyid" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="serial" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="description" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="crypto-engine" type="sgdata:CryptoEngine" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="organization" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="organizationUnit" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="commonName" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="dateNotBefore" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="dateNotAfter" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="revoked" type="xsd:boolean" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="pkcs10" type="xsd:boolean" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="certificate" nillable="true" type="xsd:base64Binary" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="SignDocumentRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="keyid" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="withContent" type="xsd:boolean" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="docToSign" type="sgdata:Document" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="SignDocumentByGroupRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="group-id" type="xsd:int" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="withContent" type="xsd:boolean" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="docToSign" type="sgdata:Document" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="SignDocumentWithHashRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="keyid" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="withContent" type="xsd:boolean" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="docToSign" type="sgdata:Document" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="hash-algorithm" type="sgdata:SHashAlgorithm" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="SignDocumentByGroupWithHashRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="group-id" type="xsd:int" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="withContent" type="xsd:boolean" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="docToSign" type="sgdata:Document" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="hash-algorithm" type="sgdata:SHashAlgorithm" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="SignDocumentResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="signedDoc" type="sgdata:Document" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="status" type="xsd:boolean" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="NameValuePair">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="field-name" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="field-value" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="VerifyRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="signedDoc" type="sgdata:Document" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="originalDoc" nillable="true" type="sgdata:Document" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="folio" nillable="true" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="VerifyResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="sequence" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="tspDoc" type="sgdata:Document" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="AddUserRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="username" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="password" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="name" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="email" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="isAdministrador" type="xsd:boolean" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="isActive" type="xsd:boolean" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="certificate" nillable="true" type="xsd:base64Binary" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="DeleteUserRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="username" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="UpdateUserRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="username" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="password" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="name" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="email" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="keyid" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="isAdministrador" nillable="true" type="xsd:boolean" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="isActive" nillable="true" type="xsd:boolean" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="certificate" nillable="true" type="xsd:base64Binary" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetUserRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="username" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetUserResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="user" type="sgdata:User" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="SetUserPwdRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="username" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="old-pwd" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="new-pwd" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetAllUsersRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetAllUsersResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="users" type="sgdata:User" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetKeysByUserRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="username" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetKeysByUserResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="KeyIDs" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetKeysByUser2Request">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="username" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetKeysByUser2Response">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="keys" nillable="true" type="sgdata:Key" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="AddKeyRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="description" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="crypto-engine" type="sgdata:CryptoEngine" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="password" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="certificate" nillable="true" type="xsd:base64Binary" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="key" nillable="true" type="xsd:base64Binary" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="AddKeyResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="keyid" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="UpdateKeyRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="keyid" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="description" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="revoked" nillable="true" type="xsd:boolean" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="UpdateKeyResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="status" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetKeyRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="keyid" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetKeyResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="key" type="sgdata:Key" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="DeleteKeyRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="keyid" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetAllKeysRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetAllKeysResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="keys" nillable="true" type="sgdata:Key" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetUsersByKeyRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="keyid" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetUsersByKeyResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="Users" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="AssignKeyToUserRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="username" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="keyid" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="AssignKeyToUserResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="status" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="DeAssignKeyToUserRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="username" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="keyid" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetAllAssignmentsRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetAllAssignmentsResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="userKeys" type="sgdata:UserKey" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetPrintableUnilateralRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="idFromVerify" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="watermark-id" nillable="true" type="xsd:int" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="originalDoc" nillable="true" type="sgdata:Document" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetPrintableUnilateralXMLRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="idFromVerify" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="xslfo" type="xsd:base64Binary" />
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="template-vars" type="sgdata:NameValuePair" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="watermark-id" nillable="true" type="xsd:int" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="originalDoc" nillable="true" type="sgdata:Document" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetPrintableUnilateralResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="printableDoc" type="sgdata:Document" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetUnilateralEvidencesRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="idFromVerify" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="evidence" type="sgdata:evidence" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetUnilateralEvidencesResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="document" type="sgdata:Document" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetForensicEvidencesPackageRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="idFromVerify" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetForensicEvidencesPackageResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="evidencesDoc" type="sgdata:Document" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetPrintableMultilateralRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="idFromInit" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="originalDoc" type="sgdata:Document" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="watermark-id" nillable="true" type="xsd:int" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetPrintableMultilateralResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="printableDoc" type="sgdata:Document" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetPrintableMultilateralEvidenceRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="idFromInit" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="hashFromOriginalDoc" type="sgdata:Document" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetPrintableMultilateralEvidenceResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="printableDoc" type="sgdata:Document" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="CreateRSAKeysRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="crypto-engine" type="sgdata:CryptoEngine" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="description" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="names" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="keysize" type="xsd:int" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="CreateRSAKeysResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="keyid" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="pkcs10" type="sgdata:Document" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="SetKeyCertRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="keyid" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="cert" type="sgdata:Document" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetOriginalDocumentRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="sequence" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetOriginalDocumentResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="document" type="sgdata:Document" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="RequestKey">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="id" type="xsd:int" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="description" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="username" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="dn-string" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="requestDate" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="keyid" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetAllRequestKeysRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="username" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetAllRequestKeysResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="listRequestKey" nillable="true" type="sgdata:RequestKey" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetRequestKeysByIDRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="id" type="xsd:int" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetRequestKeysByIDResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="requestKey" type="sgdata:RequestKey" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="AddRequestKeysRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="username" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="dn-string" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="description" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="AddRequestKeysResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="id" type="xsd:int" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="requestDate" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="DeleteRequestKeysRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="id" type="xsd:int" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="UpdateRequestKeysRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="id" type="xsd:int" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="username" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="dn-string" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="description" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="keyid" nillable="true" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="Group">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="group-id" type="xsd:int" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="name" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="admin" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="default-user" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="members" nillable="true" type="sgdata:User" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="GetGroupsListRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetGroupsListResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="groups" nillable="true" type="sgdata:Group" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetGroupsByUserRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="username" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetGroupsByUserResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="groups" nillable="true" type="sgdata:Group" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetGroupInfoRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="group-id" type="xsd:int" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetGroupInfoResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="group" nillable="true" type="sgdata:Group" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="AddGroupRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="name" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="AddGroupResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="group-id" type="xsd:int" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="UpdateGroupRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="group-id" type="xsd:int" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="name" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="admin" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="default-user" nillable="true" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="DeleteGroupRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="group-id" type="xsd:int" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="AddGroupMembersRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="group-id" type="xsd:int" />
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="members" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="DeleteGroupMembersRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="group-id" type="xsd:int" />
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="members" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetXMLForensicEvidencesUnilateralRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="idFromVerify" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="originalDoc" nillable="true" type="sgdata:Document" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetXMLForensicEvidencesUnilateralResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="evidences" type="sgdata:Document" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetXMLForensicEvidencesMultilateralRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="idFromVerify" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="originalDoc" type="sgdata:Document" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetXMLForensicEvidencesMultilateralResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="evidences" type="sgdata:Document" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="MultilateralInitRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="docToSign" type="sgdata:Document" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="datatype" type="sgdata:DataType" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="cms-with-content" nillable="true" type="xsd:boolean" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="MultilateralInitResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="id" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="digest" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="MultilateralInitWithHashRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="docToSign" type="sgdata:Document" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="datatype" type="sgdata:DataType" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="hash-algorithm" type="sgdata:SHashAlgorithm" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="cms-with-content" nillable="true" type="xsd:boolean" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="MultilateralInitWithHashResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="id" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="digest" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="MultilateralUpdateRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="idFromInit" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="documentSignedWithoutContent" type="sgdata:Document" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="MultilateralUpdateResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="sequenceOfTransaction" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="MultilateralFinalizeRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="idFromInit" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="keepOpen" type="xsd:boolean" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="MultilateralFinalizeResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="tspDoc" type="sgdata:Document" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="cmsDoc" type="sgdata:Document" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="originalDocumentName" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="Profile">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="id" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="name" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="retention" type="xsd:int" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="attributes" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Attr">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="name" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="value" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ResponseOK">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="StoreDocumentRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="profileID" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="document" type="sgdata:Document2" />
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="attrs" type="sgdata:Attr" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="userID" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="HostID" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="RepositoryID" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="SourceID" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="StoreDocumentResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="depositUID" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="msg" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="DeleteDocumentRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="depositUID" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="userID" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="HostID" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="RepositoryID" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="SourceID" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetDocumentRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="depositUID" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="userID" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="HostID" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="RepositoryID" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="SourceID" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetDocumentResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="SIP" type="xsd:base64Binary" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetProfileListRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetProfileListResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="profiles" nillable="true" type="sgdata:Profile" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetOCSPDataRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="ocsp" type="xsd:base64Binary" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetOCSPDataResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="AcName" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="CertificateStatus" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="OscpResponderName" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="ProduceAtDate" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="RevocationDate" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="SerialNumber" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="WaterMarkInfo">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="watermark-id" type="xsd:int" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="name" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="GetWaterMarksListRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetWaterMarksListResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="watermarksList" nillable="true" type="sgdata:WaterMarkInfo" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="AddWaterMarkRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="name" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="watermarkDescFile" type="xsd:base64Binary" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="AddWaterMarkResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="watermark-id" type="xsd:int" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="UpdateWaterMarkRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="watermark-id" type="xsd:int" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="name" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="watermarkDescFile" type="xsd:base64Binary" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetWaterMarkRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="watermark-id" type="xsd:int" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetWaterMarkResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="watermark-id" type="xsd:int" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="name" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="watermarkDescFile" type="xsd:base64Binary" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="DeleteWaterMarkRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="watermark-id" type="xsd:int" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="Office2PDFRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="file" type="sgdata:Document" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="Office2PDFResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="pdf" type="sgdata:Document" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="XmlSignCalculateHashRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="signatureType" type="xsd:int" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="xml" type="xsd:base64Binary" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="usercert" type="xsd:base64Binary" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="XmlSignCalculateHashResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="hash" type="xsd:base64Binary" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="newxml" type="xsd:base64Binary" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="XmlSignAddSignatureRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="signatureType" type="xsd:int" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="xml" type="xsd:base64Binary" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="pkcs1" type="xsd:base64Binary" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="usercert" type="xsd:base64Binary" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="XmlSignAddSignatureResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="newxml" type="xsd:base64Binary" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="RequestUser">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="userEmail" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="userName" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="PrepareAgreement4SignatureRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="document" nillable="true" type="xsd:base64Binary" />
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="listRequestUser" type="sgdata:RequestUser" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="PrepareAgreement4SignatureResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="preparedAgreement" type="xsd:base64Binary" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="RSASignRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="keyid" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="hash-algorithm" type="sgdata:HashAlgorithm" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="digest" type="xsd:base64Binary" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="RSASignResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="signature" type="xsd:base64Binary" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="MultilateralInsertExternalCMSRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="externalData" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="externalCMS" type="xsd:base64Binary" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="MultilateralInsertExternalCMSResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="id" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="cmsData" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="tsp" type="xsd:base64Binary" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetPrintableUnilateralLiteRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="idFromVerify" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="digestedDoc" nillable="true" type="sgdata:Document" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="hash-algorithm" type="sgdata:SHashAlgorithm" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="watermark-id" type="xsd:int" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetPrintableUnilateralLiteResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="printableDoc" type="sgdata:Document" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetPrintableMultilateralLiteRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:request">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="idFromInit" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="digestedDoc" nillable="true" type="sgdata:Document" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="hash-algorithm" type="sgdata:SHashAlgorithm" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="watermark-id" type="xsd:int" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetPrintableMultilateralLiteResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="sgdata:response">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="printableDoc" type="sgdata:Document" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="ProcessGetUser">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="request" nillable="true" type="sgdata:GetUserRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="structGetUserResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="out" nillable="true" type="sgdata:GetUserResponse" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ProcessMessage">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="request" nillable="true" type="sgdata:request" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="structResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="out" nillable="true" type="sgdata:response" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ExecGetProfileList">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="request" nillable="true" type="sgdata:GetProfileListRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="structResponse1">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="out" nillable="true" type="sgdata:GetProfileListResponse" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ExecStoreDocument">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="request" nillable="true" type="sgdata:StoreDocumentRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="structResponse2">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="out" nillable="true" type="sgdata:StoreDocumentResponse" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ExecGetDocument">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="request" nillable="true" type="sgdata:GetDocumentRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="structResponse3">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="out" nillable="true" type="sgdata:GetDocumentResponse" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ExecDeleteDocument">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="request" nillable="true" type="sgdata:DeleteDocumentRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="structResponse4">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="out" nillable="true" type="sgdata:ResponseOK" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ExecGetOCSPData">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="request" nillable="true" type="sgdata:GetOCSPDataRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="structResponse5">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="out" nillable="true" type="sgdata:GetOCSPDataResponse" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </WSDL:types>
+  <WSDL:message name="ProcessGetUser">
+    <WSDL:part name="parameters" element="sgdata:ProcessGetUser" />
+  </WSDL:message>
+  <WSDL:message name="structGetUserResponse">
+    <WSDL:part name="parameters" element="sgdata:structGetUserResponse" />
+  </WSDL:message>
+  <WSDL:message name="ProcessMessage">
+    <WSDL:part name="parameters" element="sgdata:ProcessMessage" />
+  </WSDL:message>
+  <WSDL:message name="structResponse">
+    <WSDL:part name="parameters" element="sgdata:structResponse" />
+  </WSDL:message>
+  <WSDL:message name="ExecGetProfileList">
+    <WSDL:part name="parameters" element="sgdata:ExecGetProfileList" />
+  </WSDL:message>
+  <WSDL:message name="structResponse1">
+    <WSDL:part name="parameters" element="sgdata:structResponse1" />
+  </WSDL:message>
+  <WSDL:message name="ExecStoreDocument">
+    <WSDL:part name="parameters" element="sgdata:ExecStoreDocument" />
+  </WSDL:message>
+  <WSDL:message name="structResponse2">
+    <WSDL:part name="parameters" element="sgdata:structResponse2" />
+  </WSDL:message>
+  <WSDL:message name="ExecGetDocument">
+    <WSDL:part name="parameters" element="sgdata:ExecGetDocument" />
+  </WSDL:message>
+  <WSDL:message name="structResponse3">
+    <WSDL:part name="parameters" element="sgdata:structResponse3" />
+  </WSDL:message>
+  <WSDL:message name="ExecDeleteDocument">
+    <WSDL:part name="parameters" element="sgdata:ExecDeleteDocument" />
+  </WSDL:message>
+  <WSDL:message name="structResponse4">
+    <WSDL:part name="parameters" element="sgdata:structResponse4" />
+  </WSDL:message>
+  <WSDL:message name="ExecGetOCSPData">
+    <WSDL:part name="parameters" element="sgdata:ExecGetOCSPData" />
+  </WSDL:message>
+  <WSDL:message name="structResponse5">
+    <WSDL:part name="parameters" element="sgdata:structResponse5" />
+  </WSDL:message>
+  <WSDL:portType name="SgSignToolsWSPortType">
+    <WSDL:operation name="ProcessGetUser">
+      <documentation>Service definition of function sgdata__ProcessGetUser</documentation>
+      <WSDL:input message="tns:ProcessGetUser" />
+      <WSDL:output message="tns:structGetUserResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="ProcessMessage">
+      <documentation>Service definition of function sgdata__ProcessMessage</documentation>
+      <WSDL:input message="tns:ProcessMessage" />
+      <WSDL:output message="tns:structResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="ExecGetProfileList">
+      <documentation>Service definition of function sgdata__ExecGetProfileList</documentation>
+      <WSDL:input message="tns:ExecGetProfileList" />
+      <WSDL:output message="tns:structResponse1" />
+    </WSDL:operation>
+    <WSDL:operation name="ExecStoreDocument">
+      <documentation>Service definition of function sgdata__ExecStoreDocument</documentation>
+      <WSDL:input message="tns:ExecStoreDocument" />
+      <WSDL:output message="tns:structResponse2" />
+    </WSDL:operation>
+    <WSDL:operation name="ExecGetDocument">
+      <documentation>Service definition of function sgdata__ExecGetDocument</documentation>
+      <WSDL:input message="tns:ExecGetDocument" />
+      <WSDL:output message="tns:structResponse3" />
+    </WSDL:operation>
+    <WSDL:operation name="ExecDeleteDocument">
+      <documentation>Service definition of function sgdata__ExecDeleteDocument</documentation>
+      <WSDL:input message="tns:ExecDeleteDocument" />
+      <WSDL:output message="tns:structResponse4" />
+    </WSDL:operation>
+    <WSDL:operation name="ExecGetOCSPData">
+      <documentation>Service definition of function sgdata__ExecGetOCSPData</documentation>
+      <WSDL:input message="tns:ExecGetOCSPData" />
+      <WSDL:output message="tns:structResponse5" />
+    </WSDL:operation>
+  </WSDL:portType>
+  <WSDL:binding name="SgSignToolsWS" type="tns:SgSignToolsWSPortType">
+    <SOAP:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <WSDL:operation name="ProcessGetUser">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="ProcessMessage">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="ExecGetProfileList">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="ExecStoreDocument">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="ExecGetDocument">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="ExecDeleteDocument">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="ExecGetOCSPData">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+  </WSDL:binding>
+  <WSDL:service name="SgSignToolsWS">
+    <documentation>gSOAP 2.7.10 generated service definition</documentation>
+    <WSDL:port name="SgSignToolsWS" binding="tns:SgSignToolsWS">
+      <SOAP:address location="http://localhost:80" />
+    </WSDL:port>
+  </WSDL:service>
+</WSDL:definitions>
