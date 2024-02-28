@@ -23,8 +23,10 @@ namespace SeguriSign.Connector.Adapters {
       _xml.LoadXml(signXmlEvidence);
     }
 
-    internal string Convert() {
-      return GetESign();
+    internal ESignDataDto Convert() {
+      return new ESignDataDto {
+        Signature = GetESign()
+      };
     }
 
     #region Helpers

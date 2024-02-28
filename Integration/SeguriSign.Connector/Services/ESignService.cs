@@ -38,8 +38,9 @@ namespace SeguriSign.Connector {
       _userAssignedKey = GetUserAssignedKey(userCredentials.UserName);
     }
 
-    /// <summary>Firma una cadena de caracteres.</summary>
-    public string Sign(string contentToSign) {
+    /// <summary>Firma una cadena de caracteres de contenido y
+    /// regresa una estructura con la información del firmado.</summary>
+    public ESignDataDto Sign(string contentToSign) {
 
       Document documentToBeSigned = CreateDocumentToBeSigned(contentToSign);
 
@@ -59,9 +60,7 @@ namespace SeguriSign.Connector {
 
       var converter = new ESignXmlToSignDataConverter(signXmlEvidence);
 
-      var eSignData = converter.Convert();
-
-      return eSignData;
+      return converter.Convert();
     }
 
     private string GetEvidenceXmlString(string signSequenceID) {

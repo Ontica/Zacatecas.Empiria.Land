@@ -28,9 +28,9 @@ namespace Empiria.Zacatecas.Integration.SeguriSign.WebApi {
 
       var service = new ESignService(body.UserCredentials);
 
-      string result = service.Sign(body.ContentToSign);
+      ESignDataDto eSignData = service.Sign(body.ContentToSign);
 
-      return new SingleObjectModel(base.Request, result);
+      return new SingleObjectModel(base.Request, eSignData);
     }
 
     #endregion Web Apis
