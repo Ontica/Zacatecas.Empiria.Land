@@ -45,92 +45,49 @@ namespace SeguriSign.Connector.Adapters {
     #region Helpers
 
     private string GetAuthorityName() {
-      var xpath = "/signinginfo/ca";
-
-      XmlNode node = _xml.SelectSingleNode(xpath);
-
-      return node.Attributes["name"].Value;
+      return GetXmlAttributeValue("/signinginfo/ca", "name");
     }
 
     private string GetDigest() {
-      var xpath = "/signinginfo/ca/signatory/tsp";
-
-      XmlNode node = _xml.SelectSingleNode(xpath);
-
-      return node.Attributes["digest"].Value;
+      return GetXmlAttributeValue("/signinginfo/ca/signatory/tsp", "digest");
     }
 
     private string GetDocumentID() {
-      var xpath = "/signinginfo/document";
-
-      XmlNode node = _xml.SelectSingleNode(xpath);
-
-      return node.Attributes["id"].Value;
+      return GetXmlAttributeValue("/signinginfo/document", "id");
     }
 
     private string GetDocumentName() {
-      var xpath = "/signinginfo/document";
-
-      XmlNode node = _xml.SelectSingleNode(xpath);
-
-      return node.Attributes["name"].Value;
+      return GetXmlAttributeValue("/signinginfo/document", "name");
     }
 
     private DateTime GetLocalSignDate() {
-      var xpath = "/signinginfo/ca/signatory/signature";
+      var value = GetXmlAttributeValue("/signinginfo/ca/signatory/signature", "localdate");
 
-      XmlNode node = _xml.SelectSingleNode(xpath);
-
-      return DateTime.Parse(node.Attributes["localdate"].Value);
+      return DateTime.Parse(value);
     }
 
     private string GetResponderIssuer() {
-      var xpath = "/signinginfo/ca/signatory/tsp";
-
-      XmlNode node = _xml.SelectSingleNode(xpath);
-
-      return node.Attributes["responderissuer"].Value;
+      return GetXmlAttributeValue("/signinginfo/ca/signatory/tsp", "responderissuer");
     }
 
     private string GetResponderName() {
-      var xpath = "/signinginfo/ca/signatory/tsp";
-
-      XmlNode node = _xml.SelectSingleNode(xpath);
-
-      return node.Attributes["respondername"].Value;
+      return GetXmlAttributeValue("/signinginfo/ca/signatory/tsp", "respondername");
     }
 
     private string GetSerialNumber() {
-      var xpath = "/signinginfo/ca/signatory";
-
-      XmlNode node = _xml.SelectSingleNode(xpath);
-
-      return node.Attributes["serialnum"].Value;
+      return GetXmlAttributeValue("/signinginfo/ca/signatory", "serialnum");
     }
 
     private string GetSerialName() {
-      var xpath = "/signinginfo/ca/signatory";
-
-      XmlNode node = _xml.SelectSingleNode(xpath);
-
-      return node.Attributes["serialname"].Value;
+      return GetXmlAttributeValue("/signinginfo/ca/signatory", "serialname");
     }
 
-
     private string GetSignatoryName() {
-      var xpath = "/signinginfo/ca/signatory";
-
-      XmlNode node = _xml.SelectSingleNode(xpath);
-
-      return node.Attributes["name"].Value;
+      return GetXmlAttributeValue("/signinginfo/ca/signatory", "name");
     }
 
     private string GetSignatoryRole() {
-      var xpath = "/signinginfo/ca/signatory";
-
-      XmlNode node = _xml.SelectSingleNode(xpath);
-
-      return node.Attributes["role"].Value;
+      return GetXmlAttributeValue("/signinginfo/ca/signatory", "role");
     }
 
     private string GetSignature() {
@@ -142,20 +99,20 @@ namespace SeguriSign.Connector.Adapters {
     }
 
     private string GetSignatureAlgorithm() {
-      var xpath = "/signinginfo/ca/signatory/signature";
-
-      XmlNode node = _xml.SelectSingleNode(xpath);
-
-      return node.Attributes["algorithm"].Value;
+      return GetXmlAttributeValue("/signinginfo/ca/signatory/signature", "algorithm");
     }
 
     private DateTime GetSignDate() {
-      var xpath = "/signinginfo/ca/signatory/signature";
+      var value = GetXmlAttributeValue("/signinginfo/ca/signatory/signature", "date");
 
-      XmlNode node = _xml.SelectSingleNode(xpath);
-
-      return DateTime.Parse(node.Attributes["date"].Value)
+      return DateTime.Parse(value)
                      .ToUniversalTime();
+    }
+
+    private string GetXmlAttributeValue(string xPath, string attributeName) {
+      XmlNode node = _xml.SelectSingleNode(xPath);
+
+      return node.Attributes[attributeName].Value;
     }
 
     #endregion Helpers
