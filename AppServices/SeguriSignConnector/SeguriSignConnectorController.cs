@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Web.Http;
+
 using Empiria.WebApi;
 
 using SeguriSign.Connector;
@@ -19,6 +20,8 @@ namespace Empiria.Zacatecas.Integration.SeguriSign.WebApi {
   /// <summary>Public Web API used to generate and retrieve ESign.</summary>
   public class SeguriSignConnectorController : WebApiController {
 
+    private readonly string ESIGN_SERVICE_PROVIDER_URL = ConfigurationData.GetString("ESign.ServiceProvider.URL");
+
     #region Web Apis
 
     [HttpPost]
@@ -26,11 +29,24 @@ namespace Empiria.Zacatecas.Integration.SeguriSign.WebApi {
     [Route("v1/seguri-sign/e-sign")]
     public SingleObjectModel ESignContent([FromBody] SignRequestDto body) {
 
-      var service = new ESignService(body.UserCredentials);
+      var service = new ESignService(ESIGN_SERVICE_PROVIDER_URL, body.SignerCredentials);
 
       ESignDataDto eSignData = service.Sign(body.ContentToSign);
 
       return new SingleObjectModel(base.Request, eSignData);
+    }
+
+
+    [HttpPost]
+    [AllowAnonymous]
+    [Route("v1/seguri-sign/signed-pdf-document/{sequenceID}")]
+    public SingleObjectModel GetSignedPdfDocument([FromUri] string sequenceID) {
+
+      var service = new ESignService(ESIGN_SERVICE_PROVIDER_URL);
+
+      string documentName = service.GetSignedPdfDocument(sequenceID);
+
+      return new SingleObjectModel(base.Request, documentName);
     }
 
     #endregion Web Apis
@@ -40,7 +56,7 @@ namespace Empiria.Zacatecas.Integration.SeguriSign.WebApi {
 
   public class SignRequestDto {
 
-    public UserCredentialsDto UserCredentials {
+    public SignerCredentialsDto SignerCredentials {
       get; set;
     }
 

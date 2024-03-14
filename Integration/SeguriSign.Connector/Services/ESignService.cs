@@ -23,19 +23,21 @@ namespace SeguriSign.Connector {
 
     static readonly string FILES_PATH = @"E:\\z_archivos_firma\";
 
-    private readonly SgSignToolsWS _apiClient;
+    private readonly SgSignToolsWS _apiClient = new SgSignToolsWS();
 
     private readonly string _userAssignedKey;
 
-    public ESignService(UserCredentialsDto userCredentials) {
+    public ESignService(string serviceUrl) {
+      _apiClient.Url = serviceUrl;
+    }
 
-      _apiClient = new SgSignToolsWS();
+    public ESignService(string serviceUrl, SignerCredentialsDto signerCredentials) {
 
-      _apiClient.Credentials = new NetworkCredential(userCredentials.UserName, userCredentials.Password);
+      _apiClient.Credentials = new NetworkCredential(signerCredentials.UserName, signerCredentials.Password);
 
-      _apiClient.Url = "http://10.118.11.221:8081";
+      _apiClient.Url = serviceUrl;
 
-      _userAssignedKey = GetUserAssignedKey(userCredentials.UserName);
+      _userAssignedKey = GetUserAssignedKey(signerCredentials.UserName);
     }
 
     /// <summary>Firma una cadena de caracteres de contenido y
@@ -63,35 +65,31 @@ namespace SeguriSign.Connector {
       return converter.Convert();
     }
 
-    private string GetEvidenceXmlString(string signSequenceID) {
-      var xmlRequest = new GetXMLForensicEvidencesUnilateralRequest();
 
-      xmlRequest.idFromVerify = signSequenceID;
+    public string GetSignedPdfDocument(string sequenceID) {
+      GetPrintableUnilateralRequest pdf = new GetPrintableUnilateralRequest();
+
+      pdf.idFromVerify = sequenceID;
+      pdf.watermarkid = -1;
+      pdf.watermarkidSpecified = true;
 
       _apiClient.Timeout = 5 * 60 * 1000;
 
-      var xmlResponse = (GetXMLForensicEvidencesUnilateralResponse) _apiClient.ProcessMessage(xmlRequest);
+      // _apiClient.Credentials = new NetworkCredential();   // should not use credentials
 
-      byte[] xmlData = xmlResponse.evidences.data;
+      _apiClient.UseDefaultCredentials = true;
 
-      return Encoding.UTF8.GetString(xmlData, 0, xmlData.Length);
+      GetPrintableUnilateralResponse pdfresponse = (GetPrintableUnilateralResponse) _apiClient.ProcessMessage(pdf);
+
+      string fileName = Guid.NewGuid().ToString() + ".pdf";
+
+      string pdfFile = Path.Combine(FILES_PATH, "pdfs", fileName);
+
+      File.WriteAllBytes(pdfFile, pdfresponse.printableDoc.data);
+
+      return pdfFile;
     }
 
-    private string GetESignSequenceID(byte[] signedData, string filename) {
-      var verifyRequest = new VerifyRequest();
-
-      var verifyDocument = new Document();
-
-      verifyDocument.filename = filename;
-      verifyDocument.compressed = false;
-      verifyDocument.data = signedData;
-
-      verifyRequest.signedDoc = verifyDocument;
-
-      var verifyResponse = (VerifyResponse) _apiClient.ProcessMessage(verifyRequest);
-
-      return verifyResponse.sequence;
-    }
 
     #region Helpers
 
@@ -118,6 +116,38 @@ namespace SeguriSign.Connector {
       request.withContent = true;
 
       return request;
+    }
+
+
+    private string GetEvidenceXmlString(string signSequenceID) {
+      var xmlRequest = new GetXMLForensicEvidencesUnilateralRequest();
+
+      xmlRequest.idFromVerify = signSequenceID;
+
+      _apiClient.Timeout = 5 * 60 * 1000;
+
+      var xmlResponse = (GetXMLForensicEvidencesUnilateralResponse) _apiClient.ProcessMessage(xmlRequest);
+
+      byte[] xmlData = xmlResponse.evidences.data;
+
+      return Encoding.UTF8.GetString(xmlData, 0, xmlData.Length);
+    }
+
+
+    private string GetESignSequenceID(byte[] signedData, string filename) {
+      var verifyRequest = new VerifyRequest();
+
+      var verifyDocument = new Document();
+
+      verifyDocument.filename = filename;
+      verifyDocument.compressed = false;
+      verifyDocument.data = signedData;
+
+      verifyRequest.signedDoc = verifyDocument;
+
+      var verifyResponse = (VerifyResponse) _apiClient.ProcessMessage(verifyRequest);
+
+      return verifyResponse.sequence;
     }
 
     /// <summary>Regresa la llave asignada al usuario</summary>
