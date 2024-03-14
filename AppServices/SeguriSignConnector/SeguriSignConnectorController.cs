@@ -42,13 +42,14 @@ namespace Empiria.Zacatecas.Integration.SeguriSign.WebApi {
     [HttpPost]
     [AllowAnonymous]
     [Route("v1/seguri-sign/signed-pdf-document/{sequenceID}")]
-    public SingleObjectModel GetSignedPdfDocument([FromUri] string sequenceID) {
+    public SingleObjectModel GetSignedPdfDocument([FromBody] SignRequestDto body,
+                                                  [FromUri] string sequenceID) {
 
-      var service = new ESignService(ESIGN_SERVICE_PROVIDER_URL);
+      var service = new ESignService(ESIGN_SERVICE_PROVIDER_URL, body.SignerCredentials);
 
-      string documentName = service.GetSignedPdfDocument(sequenceID);
+      byte[] pdf = service.GetSignedPdfDocument(sequenceID);
 
-      return new SingleObjectModel(base.Request, documentName);
+      return new SingleObjectModel(base.Request, pdf);
     }
 
     #endregion Web Apis

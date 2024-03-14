@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.IO;
 using System.Net;
 using System.Text;
 
@@ -21,15 +20,9 @@ namespace SeguriSign.Connector {
   /// <summary>Electronic sign client connector to the SeguriSign platform.</summary>
   public class ESignService {
 
-    static readonly string FILES_PATH = @"E:\\z_archivos_firma\";
-
     private readonly SgSignToolsWS _apiClient = new SgSignToolsWS();
 
     private readonly string _userAssignedKey;
-
-    public ESignService(string serviceUrl) {
-      _apiClient.Url = serviceUrl;
-    }
 
     public ESignService(string serviceUrl, SignerCredentialsDto signerCredentials) {
 
@@ -40,8 +33,22 @@ namespace SeguriSign.Connector {
       _userAssignedKey = GetUserAssignedKey(signerCredentials.UserName);
     }
 
-    /// <summary>Firma una cadena de caracteres de contenido y
-    /// regresa una estructura con la información del firmado.</summary>
+
+    public byte[] GetSignedPdfDocument(string signSequenceID) {
+      GetPrintableUnilateralRequest pdfRequest = new GetPrintableUnilateralRequest();
+
+      pdfRequest.idFromVerify = signSequenceID;
+      pdfRequest.watermarkid = -1;
+      pdfRequest.watermarkidSpecified = true;
+
+      _apiClient.Timeout = 5 * 60 * 1000;
+
+      GetPrintableUnilateralResponse response = (GetPrintableUnilateralResponse) _apiClient.ProcessMessage(pdfRequest);
+
+      return response.printableDoc.data;
+    }
+
+
     public ESignDataDto Sign(string contentToSign, string documentUID) {
 
       Document documentToBeSigned = CreateDocumentToBeSigned(contentToSign, documentUID);
@@ -66,31 +73,6 @@ namespace SeguriSign.Connector {
     }
 
 
-    public string GetSignedPdfDocument(string signSequenceID) {
-      GetPrintableUnilateralRequest pdf = new GetPrintableUnilateralRequest();
-
-      pdf.idFromVerify = signSequenceID;
-      pdf.watermarkid = -1;
-      pdf.watermarkidSpecified = true;
-
-      _apiClient.Timeout = 5 * 60 * 1000;
-
-      // _apiClient.Credentials = new NetworkCredential();   // should not use credentials
-
-      _apiClient.UseDefaultCredentials = true;
-
-      GetPrintableUnilateralResponse pdfresponse = (GetPrintableUnilateralResponse) _apiClient.ProcessMessage(pdf);
-
-      string fileName = Guid.NewGuid().ToString() + ".pdf";
-
-      string pdfFile = Path.Combine(FILES_PATH, "pdfs", fileName);
-
-      File.WriteAllBytes(pdfFile, pdfresponse.printableDoc.data);
-
-      return pdfFile;
-    }
-
-
     #region Helpers
 
     private Document CreateDocumentToBeSigned(string contentToSign, string documentUID) {
@@ -104,6 +86,7 @@ namespace SeguriSign.Connector {
 
       return document;
     }
+
 
     private SignDocumentRequest CreateSignDocumentRequest(Document documentToBeSigned) {
       var request = new SignDocumentRequest();
