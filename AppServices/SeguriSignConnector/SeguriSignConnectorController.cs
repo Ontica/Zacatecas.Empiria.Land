@@ -31,7 +31,9 @@ namespace Empiria.Zacatecas.Integration.SeguriSign.WebApi {
 
       var service = new ESignService(ESIGN_SERVICE_PROVIDER_URL, body.SignerCredentials);
 
-      ESignDataDto eSignData = service.Sign(body.ContentToSign);
+      var documentUID = Guid.NewGuid().ToString();
+
+      ESignDataDto eSignData = service.Sign(body.ContentToSign, documentUID);
 
       return new SingleObjectModel(base.Request, eSignData);
     }

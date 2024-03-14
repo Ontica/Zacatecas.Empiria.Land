@@ -42,9 +42,9 @@ namespace SeguriSign.Connector {
 
     /// <summary>Firma una cadena de caracteres de contenido y
     /// regresa una estructura con la información del firmado.</summary>
-    public ESignDataDto Sign(string contentToSign) {
+    public ESignDataDto Sign(string contentToSign, string documentUID) {
 
-      Document documentToBeSigned = CreateDocumentToBeSigned(contentToSign);
+      Document documentToBeSigned = CreateDocumentToBeSigned(contentToSign, documentUID);
 
       SignDocumentRequest signRequest = CreateSignDocumentRequest(documentToBeSigned);
 
@@ -66,10 +66,10 @@ namespace SeguriSign.Connector {
     }
 
 
-    public string GetSignedPdfDocument(string sequenceID) {
+    public string GetSignedPdfDocument(string signSequenceID) {
       GetPrintableUnilateralRequest pdf = new GetPrintableUnilateralRequest();
 
-      pdf.idFromVerify = sequenceID;
+      pdf.idFromVerify = signSequenceID;
       pdf.watermarkid = -1;
       pdf.watermarkidSpecified = true;
 
@@ -93,17 +93,14 @@ namespace SeguriSign.Connector {
 
     #region Helpers
 
-    private Document CreateDocumentToBeSigned(string contentToSign) {
-      string fileToBeSigned = Path.Combine(FILES_PATH, "por_firmar",
-                                           "prueba_firma.txt");
-
-      File.WriteAllText(fileToBeSigned, contentToSign);
+    private Document CreateDocumentToBeSigned(string contentToSign, string documentUID) {
+      var encoder = new UTF8Encoding(false);
 
       var document = new Document();
 
-      document.filename = Path.GetFileName(fileToBeSigned);
+      document.filename = documentUID;
       document.compressed = false;
-      document.data = File.ReadAllBytes(fileToBeSigned);
+      document.data = encoder.GetBytes(contentToSign);
 
       return document;
     }
