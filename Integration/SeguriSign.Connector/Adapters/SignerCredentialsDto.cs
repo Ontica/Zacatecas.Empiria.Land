@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Electronic Sign Services                   Component : Adapters Layer                          *
 *  Assembly : SeguriSign.Connector.dll                   Pattern   : Input Data Transfer Object              *
-*  Type     : UserCredentialsDto                         License   : Please read LICENSE.txt file            *
+*  Type     : SignerCredentialsDto                       License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Input DTO with user credentials used to sign documents.                                        *
 *                                                                                                            *
@@ -11,7 +11,7 @@
 namespace SeguriSign.Connector.Adapters {
 
   /// <summary>Input DTO with user credentials used to sign documents.</summary>
-  public class UserCredentialsDto {
+  public class SignerCredentialsDto {
 
     public string UserName {
       get;
@@ -23,6 +23,6 @@ namespace SeguriSign.Connector.Adapters {
       set;
     }
 
-  }  // UserCredentialsDto
+  }  // SignerCredentialsDto
 
 } // namespace SeguriSign.Connector.Adapters
