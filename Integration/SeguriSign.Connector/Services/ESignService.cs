@@ -30,7 +30,11 @@ namespace SeguriSign.Connector {
 
       _apiClient.Url = serviceUrl;
 
-      _userAssignedKey = GetUserAssignedKey(signerCredentials.UserName);
+      if (signerCredentials.RetrieveUserAssignedKey) {
+        _userAssignedKey = GetUserAssignedKey(signerCredentials.UserName);
+      } else {
+        _userAssignedKey = string.Empty;
+      }
     }
 
 
