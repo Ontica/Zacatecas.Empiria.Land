@@ -71,6 +71,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="README.md" />
     <None Include="Web References\SeguriSignWS\GetDocumentResponse.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
@@ -117,6 +118,8 @@
       <CachedSettingsPropName>SeguriSign_Connector_SeguriSignWS_SgSignToolsWS</CachedSettingsPropName>
     </WebReferenceUrl>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="LICENSE.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -26,9 +26,9 @@ namespace SeguriSign.Connector {
 
     public ESignService(string serviceUrl, SignerCredentialsDto signerCredentials) {
 
-      _apiClient.Credentials = new NetworkCredential(signerCredentials.UserName, signerCredentials.Password);
-
       _apiClient.Url = serviceUrl;
+
+      _apiClient.Credentials = new NetworkCredential(signerCredentials.UserName, signerCredentials.Password);
 
       if (signerCredentials.RetrieveUserAssignedKey) {
         _userAssignedKey = GetUserAssignedKey(signerCredentials.UserName);
@@ -147,7 +147,7 @@ namespace SeguriSign.Connector {
         return resp.KeyIDs[0];
 
       } else {
-        throw new Exception("El usuario no tiene llaves asignadas, SeguriSign Tools");
+        throw new Exception("La persona usuaria no tiene llaves asignadas, SeguriSign Tools.");
       }
     }
 
