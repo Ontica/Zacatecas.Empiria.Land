@@ -58,7 +58,7 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
     public async Task<string> GetPaymentStatus(IPaymentOrder paymentOrder) {
 
       if (string.IsNullOrWhiteSpace(paymentOrder.UID)) {
-        Assertion.RequireFail("Este trámite no generada una línea de captura.");
+        Assertion.RequireFail("No ha sido generada una línea de captura para este trámite.");
       }
 
       int idPagoElectronico = 0;

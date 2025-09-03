@@ -8,10 +8,12 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+
 using System.Net.Http;
 using System.Net.Http.Headers;
+
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Empiria.Zacatecas.Integration.SITFinanzasConnector.Adapters;
 
@@ -36,7 +38,7 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
 
     internal async Task<OrdenPagoDto> CreatePaymentRequest(SolicitudDto request) {
       HttpResponseMessage response =
-              await client.PostAsJsonAsync("pagosDependencias/calcularRegistroPublicoCompleto", request);
+        await client.PostAsJsonAsync("pagosDependencias/calcularRegistroPublicoCompleto", request);
 
       response.EnsureSuccessStatusCode();
 
@@ -60,7 +62,7 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
       var serviceBudget = new PresupuestoRespuestaDto();
 
       HttpResponseMessage response =
-              await client.PostAsJsonAsync("pagosDependencias/registroPublico", presupuestoDeServicio);
+        await client.PostAsJsonAsync("pagosDependencias/registroPublico", presupuestoDeServicio);
 
       if (response.IsSuccessStatusCode) {
         serviceBudget = await response.Content.ReadAsAsync<PresupuestoRespuestaDto>();
@@ -73,7 +75,8 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
     internal async Task<string> GetPaymentFormat(int idPago) {
       string paymentFormUrl = "";
 
-      HttpResponseMessage response = await client.GetAsync($"formatopago/rp/?idPagoElectronico={idPago}");
+      HttpResponseMessage response =
+        await client.GetAsync($"formatopago/rp/?idPagoElectronico={idPago}");
 
       if (response.IsSuccessStatusCode) {
         paymentFormUrl = await response.Content.ReadAsStringAsync();
@@ -85,7 +88,7 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
 
     internal async Task<PagoDto> ValidatePayment(int idPagoElectronico) {
       HttpResponseMessage response =
-              await client.GetAsync($"pagosDependencias/consultarPagoRegistroPublico/{idPagoElectronico}");
+          await client.GetAsync($"pagosDependencias/consultarPagoRegistroPublico/{idPagoElectronico}");
 
       if (response.IsSuccessStatusCode) {
         return await response.Content.ReadAsAsync<PagoDto>();

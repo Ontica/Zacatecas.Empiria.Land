@@ -134,10 +134,11 @@ namespace SeguriSign.Connector {
       return verifyResponse.sequence;
     }
 
+
     /// <summary>Regresa la llave asignada al usuario</summary>
     private string GetUserAssignedKey(string userName) {
 
-      GetKeysByUserRequest req = new GetKeysByUserRequest();
+      var req = new GetKeysByUserRequest();
 
       req.username = userName;
 

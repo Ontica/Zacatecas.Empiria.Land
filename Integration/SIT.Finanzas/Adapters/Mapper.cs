@@ -45,7 +45,7 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector.Adapters {
 
       if (DateTime.TryParse(ordenPago.fechaGeneracion,
                             System.Globalization.CultureInfo.GetCultureInfo("es-US"),
-                            System.Globalization.DateTimeStyles.None,  out dateValue)) {
+                            System.Globalization.DateTimeStyles.None, out dateValue)) {
         paymentOrder.IssueTime = dateValue;
       }
 
@@ -66,10 +66,10 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector.Adapters {
     static internal SITPaymentDto MapSITPaymentToPayment(PagoDto SITPayment) {
       SITPaymentDto payment = new SITPaymentDto();
 
-      payment.PaymentUID = SITPayment.IdCobro.ToString();
+      payment.PaymentUID = SITPayment.idCobro.ToString();
       payment.PaymentDate = SITPayment.fechaCobro;
       payment.PaymentDocumentURL = SITPayment.urlRecibo;
-      payment.Total = Convert.ToDecimal(SITPayment.total);
+      payment.Total = SITPayment.total;
       payment.Status = SITPayment.estatus;
 
       return payment;

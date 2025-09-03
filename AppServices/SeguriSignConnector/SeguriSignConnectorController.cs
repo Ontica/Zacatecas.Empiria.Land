@@ -7,7 +7,9 @@
 *  Summary  : Public Web API used to generate and retrieve ESign.                                            *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
+using System.IO;
 using System.Web.Http;
 
 using Empiria.WebApi;
@@ -20,7 +22,8 @@ namespace Empiria.Zacatecas.Integration.SeguriSign.WebApi {
   /// <summary>Public Web API used to generate and retrieve ESign.</summary>
   public class SeguriSignConnectorController : WebApiController {
 
-    private readonly string ESIGN_SERVICE_PROVIDER_URL = ConfigurationData.GetString("ESign.ServiceProvider.URL");
+    private readonly string ESIGN_SERVICE_PROVIDER_URL = ConfigurationData.GetString("ElectronicSignature.ServiceProvider.URL");
+    private readonly string ESIGN_DOCUMENTS_FOLDER = ConfigurationData.GetString("ElectronicSignature.DocumentsFolder");
 
     #region Web Apis
 
@@ -49,7 +52,11 @@ namespace Empiria.Zacatecas.Integration.SeguriSign.WebApi {
 
       byte[] pdf = service.GetSignedPdfDocument(sequenceID);
 
-      return new SingleObjectModel(base.Request, pdf);
+      var path = Path.Combine(ESIGN_DOCUMENTS_FOLDER, $"sello.registral.firmado.{sequenceID}.pdf");
+
+      File.WriteAllBytes(path, pdf);
+
+      return new SingleObjectModel(base.Request, path);
     }
 
     #endregion Web Apis
