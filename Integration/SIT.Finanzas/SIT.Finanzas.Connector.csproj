@@ -58,12 +58,12 @@
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
+    <PackageReference Include="Empiria.Core" Version="8.0.0" />
     <PackageReference Include="Empiria.Land.Integration" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
+    <ProjectReference Include="..\..\..\core\Core\Empiria.Core.csproj" />
     <ProjectReference Include="..\..\..\land\Land.Integration\Empiria.Land.Integration.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\SeguriSign.Connector\SeguriSign.Connector.csproj" />
   </ItemGroup>
 </Project>

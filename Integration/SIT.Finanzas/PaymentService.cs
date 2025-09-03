@@ -7,7 +7,6 @@
 *  Summary  : Implements IPaymentService interface using Zacatecas Finanzas SIT services.                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 using System.Threading.Tasks;
 
 using Empiria.Land.Integration.PaymentServices;
@@ -57,7 +56,16 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
 
 
     public async Task<string> GetPaymentStatus(IPaymentOrder paymentOrder) {
-      int idPagoElectronico = Convert.ToInt32(paymentOrder.UID);
+
+      if (string.IsNullOrWhiteSpace(paymentOrder.UID)) {
+        Assertion.RequireFail("Este trámite no generada una línea de captura.");
+      }
+
+      int idPagoElectronico = 0;
+
+      if (!int.TryParse(paymentOrder.UID, out idPagoElectronico)) {
+        Assertion.RequireFail("El identificador del recibo de pago no es numérico.");
+      }
 
       var SITPayment = await _apiClient.ValidatePayment(idPagoElectronico);
 
