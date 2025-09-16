@@ -38,6 +38,24 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
       return await Task.FromResult(0m);
     }
 
+
+    public async Task EnsureIsPayed(string paymentOrderUID, decimal amount) {
+      SITPaymentDto payment = await GetPayment(paymentOrderUID);
+
+      Assertion.Require(payment.Status,
+            $"El recibo de pago '{paymentOrderUID}' no está registrado " +
+            $"en la Secretaría de Finanzas.");
+
+      Assertion.Require(payment.Status == "PAGADO",
+                  $"El recibo de pago {paymentOrderUID} no ha sido pagado. " +
+                  $"Su estado actual es '{payment.Status}'.");
+
+      Assertion.Require(amount == payment.Total,
+                  $"El importe {amount.ToString("C2")} no coincide con el importe " +
+                  $"pagado en la Secretaría de Finanzas.");
+    }
+
+
     public async Task<IPaymentOrder> GeneratePaymentOrderFor(PaymentOrderRequestDto paymentOrderRequest) {
       SolicitudDto sitRequest = Mapper.MapPaymentRequestToSITRequest(paymentOrderRequest);
 
@@ -55,6 +73,16 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
 
 
     public async Task<string> GetPaymentStatus(string paymentOrderUID) {
+      SITPaymentDto payment = await GetPayment(paymentOrderUID);
+
+      return payment.Status;
+    }
+
+    #endregion Public methods
+
+    #region Helpers
+
+    private async Task<SITPaymentDto> GetPayment(string paymentOrderUID) {
 
       if (string.IsNullOrWhiteSpace(paymentOrderUID)) {
         Assertion.RequireFail("No ha sido generada una línea de captura para este trámite.");
@@ -69,15 +97,13 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
       var sitPayment = await _apiClient.ValidatePayment(idPagoElectronico);
 
       Assertion.Require(sitPayment != null && sitPayment.total != null,
-                  $"No se encontró la información del recibo de pago {idPagoElectronico} " +
-                  $"en la Secretaría de Finanzas.");
+                  $"No se encontró la información del recibo de pago " +
+                  $"{idPagoElectronico} en la Secretaría de Finanzas.");
 
-      var payment = Mapper.MapSITPaymentToPayment(sitPayment);
-
-      return payment.Status;
+      return Mapper.MapSITPaymentToPayment(sitPayment);
     }
 
-    #endregion Public methods
+    #endregion Helpers
 
   } // class PaymentService
 

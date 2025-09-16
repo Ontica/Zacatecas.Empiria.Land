@@ -69,7 +69,7 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector.Adapters {
         PaymentDate = SITPayment.fechaCobro,
         PaymentDocumentURL = SITPayment.urlRecibo,
         Total = SITPayment.total.Value,
-        Status = SITPayment.estatus
+        Status = SITPayment.estatus?.ToUpperInvariant()
       };
     }
 
