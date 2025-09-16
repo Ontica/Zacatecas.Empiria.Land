@@ -38,7 +38,6 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
       return await Task.FromResult(0m);
     }
 
-
     public async Task<IPaymentOrder> GeneratePaymentOrderFor(PaymentOrderRequestDto paymentOrderRequest) {
       SolicitudDto sitRequest = Mapper.MapPaymentRequestToSITRequest(paymentOrderRequest);
 
@@ -55,15 +54,15 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
     }
 
 
-    public async Task<string> GetPaymentStatus(IPaymentOrder paymentOrder) {
+    public async Task<string> GetPaymentStatus(string paymentOrderUID) {
 
-      if (string.IsNullOrWhiteSpace(paymentOrder.UID)) {
+      if (string.IsNullOrWhiteSpace(paymentOrderUID)) {
         Assertion.RequireFail("No ha sido generada una línea de captura para este trámite.");
       }
 
       int idPagoElectronico = 0;
 
-      if (!int.TryParse(paymentOrder.UID, out idPagoElectronico)) {
+      if (!int.TryParse(paymentOrderUID, out idPagoElectronico)) {
         Assertion.RequireFail("El identificador del recibo de pago no es numérico.");
       }
 
