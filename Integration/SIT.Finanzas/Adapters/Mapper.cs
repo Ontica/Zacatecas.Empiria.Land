@@ -64,15 +64,13 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector.Adapters {
 
 
     static internal SITPaymentDto MapSITPaymentToPayment(PagoDto SITPayment) {
-      SITPaymentDto payment = new SITPaymentDto();
-
-      payment.PaymentUID = SITPayment.idCobro.ToString();
-      payment.PaymentDate = SITPayment.fechaCobro;
-      payment.PaymentDocumentURL = SITPayment.urlRecibo;
-      payment.Total = SITPayment.total;
-      payment.Status = SITPayment.estatus;
-
-      return payment;
+      return new SITPaymentDto {
+        PaymentUID = SITPayment.idCobro.Value.ToString(),
+        PaymentDate = SITPayment.fechaCobro,
+        PaymentDocumentURL = SITPayment.urlRecibo,
+        Total = SITPayment.total.Value,
+        Status = SITPayment.estatus
+      };
     }
 
 

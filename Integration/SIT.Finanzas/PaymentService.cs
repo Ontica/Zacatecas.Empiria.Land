@@ -67,9 +67,13 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector {
         Assertion.RequireFail("El identificador del recibo de pago no es numérico.");
       }
 
-      var SITPayment = await _apiClient.ValidatePayment(idPagoElectronico);
+      var sitPayment = await _apiClient.ValidatePayment(idPagoElectronico);
 
-      var payment = Mapper.MapSITPaymentToPayment(SITPayment);
+      Assertion.Require(sitPayment != null && sitPayment.total != null,
+                  $"No se encontró la información del recibo de pago {idPagoElectronico} " +
+                  $"en la Secretaría de Finanzas.");
+
+      var payment = Mapper.MapSITPaymentToPayment(sitPayment);
 
       return payment.Status;
     }

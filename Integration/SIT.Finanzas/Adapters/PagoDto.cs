@@ -12,9 +12,9 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector.Adapters {
 
   internal class PagoDto {
 
-    public int idCobro {
+    public int? idCobro {
       get; set;
-    } = 0;
+    } = null;
 
 
     public string estatus {
@@ -27,9 +27,9 @@ namespace Empiria.Zacatecas.Integration.SITFinanzasConnector.Adapters {
     } = string.Empty;
 
 
-    public decimal total {
+    public decimal? total {
       get; set;
-    } = 0;
+    } = null;
 
 
     public string urlRecibo {
