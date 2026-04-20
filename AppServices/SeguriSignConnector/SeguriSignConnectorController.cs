@@ -10,6 +10,7 @@
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 using Empiria.WebApi;
@@ -22,7 +23,8 @@ namespace Empiria.Zacatecas.Integration.SeguriSign.WebApi {
   /// <summary>Public Web API used to generate and retrieve ESign.</summary>
   public class SeguriSignConnectorController : WebApiController {
 
-    private readonly string ESIGN_SERVICE_PROVIDER_URL = ConfigurationData.GetString("ElectronicSignature.ServiceProvider.URL");
+    private readonly string FORMER_ESIGN_SERVICE_PROVIDER_URL = ConfigurationData.GetString("Former.ElectronicSignature.ServiceProvider.URL");
+
     private readonly string ESIGN_DOCUMENTS_FOLDER = ConfigurationData.GetString("ElectronicSignature.DocumentsFolder");
 
     #region Web Apis
@@ -32,7 +34,7 @@ namespace Empiria.Zacatecas.Integration.SeguriSign.WebApi {
     [Route("v1/seguri-sign/e-sign")]
     public SingleObjectModel ESignContent([FromBody] SignRequestDto body) {
 
-      var service = new ESignService(ESIGN_SERVICE_PROVIDER_URL, body.SignerCredentials);
+      var service = new ESignService(FORMER_ESIGN_SERVICE_PROVIDER_URL, body.SignerCredentials);
 
       var documentUID = Guid.NewGuid().ToString();
 
@@ -44,11 +46,28 @@ namespace Empiria.Zacatecas.Integration.SeguriSign.WebApi {
 
     [HttpPost]
     [AllowAnonymous]
+    [Route("v2/seguri-sign/get-security-token")]
+    public async Task<SingleObjectModel> GetSecurityToken([FromBody] SignRequestDto body) {
+
+      var service = new SignServices();
+
+      await service.Authenticate(body.SignerCredentials.UserName, body.SignerCredentials.Password);
+
+      var message = new {
+        message = "Authentication successful. Security token obtained."
+      };
+
+      return new SingleObjectModel(base.Request, message);
+    }
+
+
+    [HttpPost]
+    [AllowAnonymous]
     [Route("v1/seguri-sign/signed-pdf-document/{sequenceID}")]
     public SingleObjectModel GetSignedPdfDocument([FromBody] SignRequestDto body,
                                                   [FromUri] string sequenceID) {
 
-      var service = new ESignService(ESIGN_SERVICE_PROVIDER_URL, body.SignerCredentials);
+      var service = new ESignService(FORMER_ESIGN_SERVICE_PROVIDER_URL, body.SignerCredentials);
 
       byte[] pdf = service.GetSignedPdfDocument(sequenceID);
 

@@ -67,6 +67,7 @@
     <PackageReference Include="Empiria.Security.Managment.WebApi" Version="5.0.0" />
     <PackageReference Include="Empiria.Land.WebApi" Version="5.0.0" />
     <PackageReference Include="SIT.Finanzas.Connector" Version="1.0.0" />
+    <PackageReference Include="SeguriSign.ApiClient" Version="2.0.0" />
     <PackageReference Include="SeguriSign.Connector" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
@@ -74,6 +75,7 @@
     <ProjectReference Include="..\..\security\Security.Management.WebApi\Empiria.Security.Management.WebApi.csproj" />
     <ProjectReference Include="..\..\land\Land.WebAPI\Empiria.Land.WebApi.csproj" />
     <ProjectReference Include="..\Integration\SIT.Finanzas\SIT.Finanzas.Connector.csproj" />
+    <ProjectReference Include="..\Integration\SeguriSign.ApiClient\SeguriSign.ApiClient.csproj" />
     <ProjectReference Include="..\Integration\SeguriSign.Connector\SeguriSign.Connector.csproj" />
   </ItemGroup>
   <ItemGroup>
