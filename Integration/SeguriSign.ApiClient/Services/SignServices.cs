@@ -17,8 +17,6 @@ namespace Empiria.Zacatecas.Integration.SeguriSign {
 
     private readonly SeguriSignApiClient _apiClient;
 
-    private string _securityToken;
-
     #region Methods
 
     public SignServices() {
@@ -27,8 +25,13 @@ namespace Empiria.Zacatecas.Integration.SeguriSign {
       _apiClient = new SeguriSignApiClient(baseAddress);
     }
 
-    public async Task Authenticate(string username, string password) {
-      _securityToken = await _apiClient.Authenticate(username, password);
+    public async Task Authenticate(SeguriSignCredentialsDto credentials) {
+      await _apiClient.Authenticate(credentials);
+    }
+
+
+    public async Task<string> Sign(string content) {
+      return await _apiClient.SignContent(content, "abcdefg.pdf");
     }
 
     #endregion Methods
