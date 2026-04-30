@@ -11,6 +11,7 @@ using System;
 
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Empiria.Zacatecas.Integration.SeguriSign {
@@ -20,8 +21,11 @@ namespace Empiria.Zacatecas.Integration.SeguriSign {
 
     #region Global Variables
 
-    private readonly HttpClient client = new HttpClient();
+    private readonly HttpClient client = new HttpClient(CreateHttpClientHandler());
     private readonly string baseAddress;
+
+    private string _securityToken;
+    private string _signKey;
 
     #endregion Global Variables
 
@@ -32,23 +36,82 @@ namespace Empiria.Zacatecas.Integration.SeguriSign {
 
     #region Methods
 
-    internal async Task<string> Authenticate(string username, string password) {
+    internal async Task Authenticate(SeguriSignCredentialsDto credentials) {
+      Assertion.Require(credentials, nameof(credentials));
+      Assertion.Require(credentials.UserName, nameof(credentials.UserName));
+      Assertion.Require(credentials.Password, nameof(credentials.Password));
+
       HttpResponseMessage response =
-          await client.PostAsJsonAsync("users/authLogin", new {
-            username,
-            password
+          await client.PostAsJsonAsync("seguridata-sgsigntools/users/authLogin", new {
+            username = credentials.UserName,
+            password = credentials.Password
           });
 
-      response.EnsureSuccessStatusCode();
+      if (!response.IsSuccessStatusCode) {
+        throw Assertion.EnsureNoReachThisCode($"Error authenticating user {credentials.UserName} " +
+                                              $"with SeguriSign API. Status code: {response.StatusCode}");
+      }
 
       var tokenDto = await response.Content.ReadAsAsync<TokenDto>();
 
-      return tokenDto.Token;
+      _securityToken = tokenDto.Token;
+      _signKey = credentials.SignKey;
+    }
+
+
+    internal async Task<string> SignContent(string content, string docName) {
+      Assertion.Require(content, nameof(content));
+      Assertion.Require(docName, nameof(docName));
+
+      EnsureUserIsAuthenticated();
+
+      SetAuthorizationHeader();
+
+      var encoder = new UTF8Encoding(false);
+
+      HttpResponseMessage response =
+          await client.PostAsJsonAsync("seguridata-sgsigntools/signData/SignDataWithContent", new {
+            info = encoder.GetBytes(content),
+            container = "CMS",
+            keyid = _signKey,
+            docName
+          });
+
+      if (!response.IsSuccessStatusCode) {
+        throw Assertion.EnsureNoReachThisCode($"Error signing string with SeguriSign API." +
+                                              $"Status code: {response.StatusCode}");
+      }
+
+      var signatureDto = await response.Content.ReadAsAsync<SignatureDto>();
+
+      return signatureDto.Signature;
     }
 
     #endregion Methods
 
-    #region Private Methods
+    #region Helpers
+
+    /// <summary>ToDo: Remove this method. Acepta cualquier certificado sin validar</summary>
+    static private HttpClientHandler CreateHttpClientHandler() {
+      var handler = new HttpClientHandler {
+        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+      };
+
+      return handler;
+    }
+
+
+    private void EnsureUserIsAuthenticated() {
+      Assertion.Require(_securityToken, "User is not authenticated.");
+    }
+
+
+    private void SetAuthorizationHeader() {
+      if (!client.DefaultRequestHeaders.Contains("Authorization")) {
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _securityToken);
+      }
+    }
+
 
     private void SetHttpClientProperties() {
       client.BaseAddress = new Uri(baseAddress);
@@ -57,9 +120,17 @@ namespace Empiria.Zacatecas.Integration.SeguriSign {
         new MediaTypeWithQualityHeaderValue("application/json"));
     }
 
-    #endregion Private Variables & Methods
+    #endregion Helpers
 
   } // class SeguriSignApiClient
+
+
+  internal class SignatureDto {
+
+    public string Signature {
+      get; set;
+    }
+  }
 
 
   internal class TokenDto {
