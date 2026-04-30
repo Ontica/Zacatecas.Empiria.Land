@@ -10,7 +10,6 @@
 
 using System;
 using System.IO;
-using System.Threading.Tasks;
 using System.Web.Http;
 
 using Empiria.WebApi;
@@ -41,23 +40,6 @@ namespace Empiria.Zacatecas.Integration.SeguriSign.WebApi {
       ESignDataDto eSignData = service.Sign(body.ContentToSign, documentUID);
 
       return new SingleObjectModel(base.Request, eSignData);
-    }
-
-
-    [HttpPost]
-    [AllowAnonymous]
-    [Route("v2/seguri-sign/get-security-token")]
-    public async Task<SingleObjectModel> GetSecurityToken([FromBody] SignRequestDto body) {
-
-      var service = new SignServices();
-
-      await service.Authenticate(body.SignerCredentials.UserName, body.SignerCredentials.Password);
-
-      var message = new {
-        message = "Authentication successful. Security token obtained."
-      };
-
-      return new SingleObjectModel(base.Request, message);
     }
 
 

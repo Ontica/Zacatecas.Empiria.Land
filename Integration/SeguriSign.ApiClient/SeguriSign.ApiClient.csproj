@@ -65,7 +65,4 @@
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\..\..\core\Core\Empiria.Core.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Adapters\" />
-  </ItemGroup>
 </Project>

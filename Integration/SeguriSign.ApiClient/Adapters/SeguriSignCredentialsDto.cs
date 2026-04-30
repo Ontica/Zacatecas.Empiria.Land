@@ -1,32 +1,34 @@
 ﻿/* ***********************************************************************************************************
 *                                                                                                            *
 *  Module   : Electronic Sign Services                   Component : Adapters Layer                          *
-*  Assembly : SeguriSign.Connector.dll                   Pattern   : Input Data Transfer Object              *
-*  Type     : SignerCredentialsDto                       License   : Please read LICENSE.txt file            *
+*  Assembly : SeguriSign.ApiClient.dll                   Pattern   : Input Data Transfer Object              *
+*  Type     : SeguriSignCredentialsDto                   License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Input DTO with user credentials used to sign documents.                                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace SeguriSign.Connector.Adapters {
+namespace Empiria.Zacatecas.Integration.SeguriSign {
 
   /// <summary>Input DTO with user credentials used to sign documents.</summary>
-  public class SignerCredentialsDto {
+  public class SeguriSignCredentialsDto {
 
     public string UserName {
-      get; set;
+      get;
+      set;
     } = string.Empty;
 
 
     public string Password {
-      get; set;
+      get;
+      set;
     } = string.Empty;
 
 
-    public bool RetrieveUserAssignedKey {
+    public string SignKey {
       get; set;
-    } = true;
+    } = string.Empty;
 
-  }  // SignerCredentialsDto
+  }  // SeguriSignCredentialsDto
 
-} // namespace SeguriSign.Connector.Adapters
+} // namespace Empiria.Zacatecas.Integration.SeguriSign
