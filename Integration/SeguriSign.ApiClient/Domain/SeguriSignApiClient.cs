@@ -70,11 +70,11 @@ namespace Empiria.Zacatecas.Integration.SeguriSign {
       var encoder = new UTF8Encoding(false);
 
       HttpResponseMessage response =
-          await client.PostAsJsonAsync("seguridata-sgsigntools/signData/SignDataWithContent", new {
+          await client.PostAsJsonAsync("seguridata-sgsigntools/signature/signData?doPkcs7=true&doDetached=false", new {
             info = encoder.GetBytes(content),
-            container = "CMS",
-            keyid = _signKey,
-            docName
+            signatureAlgorithm = "SHA256_WITH_RSA",
+            keyId = int.Parse(_signKey),
+            infoData = docName
           });
 
       if (!response.IsSuccessStatusCode) {
@@ -108,7 +108,7 @@ namespace Empiria.Zacatecas.Integration.SeguriSign {
 
     private void SetAuthorizationHeader() {
       if (!client.DefaultRequestHeaders.Contains("Authorization")) {
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _securityToken);
+        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {_securityToken}");
       }
     }
 

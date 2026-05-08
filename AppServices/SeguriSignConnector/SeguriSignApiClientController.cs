@@ -53,7 +53,7 @@ namespace Empiria.Zacatecas.Integration.SeguriSign.WebApi {
 
     #endregion Web Apis
 
-  } // class SeguriSignConnectorController
+  } // class SeguriSignApiClientController
 
 
   public class SeguriSignRequestDto {
